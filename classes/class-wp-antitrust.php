@@ -114,6 +114,7 @@ class Wp_Antitrust {
 	 * @return string Returns a style block.
 	 */
 	public function dolly_would() {
+
 		echo '
 		<style>
 		#goodbye-dolly {
@@ -176,6 +177,7 @@ class Wp_Antitrust {
 	 * @return string Returns the text of the footer.
 	 */
 	public function admin_footer_primary() {
+
 		printf(
 			'<span class="dashicons dashicons-flag" style="color: #ee6600"></span> %s',
 			__( 'You should consider alternatives to the monopolistic Wordpress.', 'wp-antitrust' )
@@ -190,7 +192,9 @@ class Wp_Antitrust {
 	 * @return string Returns the text of the footer.
 	 */
 	public function admin_footer_secondary() {
+
 		remove_filter( 'update_footer', 'core_update_footer' );
+
 		printf(
 			__( '<span class="dashicons dashicons-info" style="color: #4b9960"></span> Check out <a href="%s" target="_blank" rel="noopener noreferrer">ClassicPress</a> and <a href="%s" target="_blank" rel="noopener noreferrer">calmPress</a>', 'wp-antitrust' ),
 			esc_url( 'https://www.classicpress.net/' ),
