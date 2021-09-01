@@ -230,8 +230,8 @@ class Wp_Antitrust {
 		}
 
 		// Replacement arrays.
-		$dubble_yoopee = [ 'Wordpress', 'WordPress', 'wp-', 'WP-' ];
-		$autocratic    = [ 'Automattic', 'Automattic', $copy, $copy ];
+		$dubble_yoopee = [ 'Wordpress', 'WordPress', 'wordpress', 'wp-', 'WP-' ];
+		$autocratic    = [ 'Automattic', 'Automattic', 'Automattic', $copy, $copy ];
 
 		// Return filtered text.
 		return str_replace( $dubble_yoopee, $autocratic, $text );
