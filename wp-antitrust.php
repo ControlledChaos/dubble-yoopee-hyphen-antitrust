@@ -32,6 +32,51 @@ foreach ( glob( plugin_dir_path( __FILE__ ) .  'classes/*.php' ) as $filename ) 
 }
 
 /**
+ * Register the activation & deactivation hooks
+ *
+ * @since  1.0.0
+ * @access public
+ * @return void
+ */
+\register_activation_hook( __FILE__, __NAMESPACE__ . '\activate_plugin' );
+\register_deactivation_hook( __FILE__, __NAMESPACE__ . '\deactivate_plugin' );
+
+/**
+ * Activation callback
+ *
+ * The function that runs during plugin activation.
+ *
+ * @since  1.0.0
+ * @access public
+ * @return void
+ */
+function activate_plugin() {
+
+	/**
+	 * Deactivate plugins
+	 *
+	 * If the Hello Dolly plugin is active (ha!) then
+	 * deactivate it because the space is needed for
+	 * this plugin's messages.
+	 */
+	$hello = 'hello-dolly/hello.php';
+	if ( is_plugin_active( $hello ) ) {
+		deactivate_plugins( $hello );
+	}
+}
+
+/**
+ * Deactivation callback
+ *
+ * The function that runs during plugin deactivation.
+ *
+ * @since  1.0.0
+ * @access public
+ * @return void
+ */
+function deactivate_plugin() {}
+
+/**
  * Check for Wordpress
  *
  * @since  1.0.0
