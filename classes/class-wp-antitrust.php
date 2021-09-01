@@ -32,6 +32,12 @@ class Wp_Antitrust {
 		// Print styles.
 		add_action( 'admin_head', [ $this, 'dolly_would' ] );
 
+		// Primary footer text.
+		add_filter( 'admin_footer_text', [ $this, 'admin_footer_primary' ], 1 );
+
+		// Secondary footer text.
+		add_filter( 'update_footer', [ $this, 'admin_footer_secondary' ], 1 );
+
 		// Remove the Draconian capital P filters.
 		remove_filter( 'the_title', 'capital_P_dangit', 11 );
 		remove_filter( 'the_content', 'capital_P_dangit', 11 );
@@ -141,6 +147,36 @@ class Wp_Antitrust {
 		}
 		</style>
 		';
+	}
+
+	/**
+	 * Admin footer primary
+	 *
+	 * @since  1.0.0
+	 * @access public
+	 * @return string Returns the text of the footer.
+	 */
+	public function admin_footer_primary() {
+		printf(
+			'<span class="dashicons dashicons-flag" style="color: #ee6600"></span> %s',
+			__( 'You should consider alternatives to the monopolistic Wordpress.', 'wp-antitrust' )
+		);
+	}
+
+	/**
+	 * Admin footer secondary
+	 *
+	 * @since  1.0.0
+	 * @access public
+	 * @return string Returns the text of the footer.
+	 */
+	public function admin_footer_secondary() {
+		remove_filter( 'update_footer', 'core_update_footer' );
+		printf(
+			__( '<span class="dashicons dashicons-info" style="color: #4b9960"></span> Check out <a href="%s" target="_blank" rel="noopener noreferrer">ClassicPress</a> and <a href="%s" target="_blank" rel="noopener noreferrer">calmPress</a>', 'wp-antitrust' ),
+			esc_url( 'https://www.classicpress.net/' ),
+			esc_url( 'https://calmpress.org/' )
+		);
 	}
 
 	/**
