@@ -47,11 +47,18 @@ class Wp_Antitrust {
 		remove_filter( 'comment_text', 'capital_P_dangit', 31 );
 
 		// Format Wordpress & WordPress.
-		foreach ( [ 'the_content', 'the_title', 'wp_title', 'document_title' ] as $filter ) {
-			add_filter( $filter, [ $this, 'capital_ISM_dangit' ], 11 );
+		$format = [
+			'the_content',
+			'the_title',
+			'wp_title',
+			'document_title',
+			'widget_display_callback',
+			'widget_text_content',
+			'comment_text'
+		];
+		foreach ( $format as $filter ) {
+			add_filter( $filter, [ $this, 'capital_ISM_dangit' ], 31 );
 		}
-		add_filter( 'comment_text', [ $this, 'capital_ISM_dangit' ], 31 );
-		add_filter( 'widget_text_content', [ $this, 'capital_ISM_dangit' ], 11 );
 	}
 
 	/**
@@ -219,30 +226,14 @@ class Wp_Antitrust {
 		// Jealously guard the prefix.
 		static $copy = false;
 		if ( false === $copy ) {
-			$copy = _x( '&copy;', 'copyright symbol' );
+			$copy = _x( '&copy;-', 'copyright symbol and hyphen' );
 		}
 
-		// Format titles.
-		$current_filter = current_filter();
-		if ( 'the_title' === $current_filter || 'wp_title' === $current_filter ) {
-			return str_replace( [ 'Wordpress', 'WordPress', 'wp-', 'WP-' ], [ 'Automattic', 'Automattic', $copy . '-', $copy . '-' ], $text );
-		}
+		// Replacement arrays.
+		$dubble_yoopee = [ 'Wordpress', 'WordPress', 'wp-', 'WP-' ];
+		$autocratic    = [ 'Automattic', 'Automattic', $copy, $copy ];
 
-		// Format content and discussion.
-		return str_replace(
-			[
-				'Wordpress',
-				'WordPress',
-				'wp-',
-				'WP-'
-			],
-			[
-				'Automattic',
-				'Automattic',
-				$copy . '-',
-				$copy . '-'
-			],
-			$text
-		);
+		// Return filtered text.
+		return str_replace( $dubble_yoopee, $autocratic, $text );
 	}
 }
