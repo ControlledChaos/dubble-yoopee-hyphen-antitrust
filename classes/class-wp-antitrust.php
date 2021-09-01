@@ -26,11 +26,12 @@ class Wp_Antitrust {
 	 */
 	public function __construct() {
 
+		// Print styles.
+		add_action( 'admin_print_styles-index.php', [ $this, 'dolly_would' ] );
+		add_action( 'admin_print_styles-index.php', [ $this, 'welcome_styles' ] );
+
 		// Admin notice.
 		add_action( 'admin_notices', [ $this, 'goodbye_dolly' ] );
-
-		// Print styles.
-		add_action( 'admin_head', [ $this, 'dolly_would' ] );
 
 		// Remove dashboard widgets.
 		add_action( 'wp_dashboard_setup', [ $this, 'remove_widgets' ] );
@@ -40,6 +41,9 @@ class Wp_Antitrust {
 
 		// Secondary footer text.
 		add_filter( 'update_footer', [ $this, 'admin_footer_secondary' ], 1 );
+
+		// Print welcome panel scripts.
+		add_action( 'admin_print_footer_scripts-index.php', [ $this, 'welcome_scripts' ] );
 
 		// Remove the Draconian capital P filters.
 		remove_filter( 'the_title', 'capital_P_dangit', 11 );
@@ -59,6 +63,69 @@ class Wp_Antitrust {
 		foreach ( $format as $filter ) {
 			add_filter( $filter, [ $this, 'capital_ISM_dangit' ], 31 );
 		}
+	}
+
+	/**
+	 * Print admin notice styles
+	 *
+	 * @since  1.0.0
+	 * @access public
+	 * @return string Returns a style block.
+	 */
+	public function dolly_would() {
+
+		echo '
+		<style>
+		#goodbye-dolly {
+			float: right;
+			margin: 0;
+			font-size: 1rem;
+			line-height: 1.7;
+		}
+
+		.rtl #goodbye-dolly {
+			float: left;
+		}
+
+		.block-editor-page #goodbye-dolly {
+			display: none;
+		}
+
+		#goodbye-dolly .dashicons-warning {
+			color: #d00;
+			vertical-align: text-bottom;
+		}
+
+		#goodbye-dolly .dashicons-warning:before {
+			font-size: 1.25rem;
+		}
+
+		@media screen and ( max-width: 782px ) {
+			#goodbye-dolly,
+			.rtl #dolly {
+				float: none;
+				padding-left: 0;
+				padding-right: 0;
+			}
+		}
+		</style>
+		';
+	}
+
+	/**
+	 * Print welcome panel styles
+	 *
+	 * @since  1.0.0
+	 * @access public
+	 * @return string Returns a style block.
+	 */
+	public function welcome_styles() {
+
+		$styles  = '<style>';
+		$styles .= '.js .welcome-panel-content h2 { display: none }';
+		$styles .= '</style>';
+
+		echo $styles;
 	}
 
 	/**
@@ -114,53 +181,6 @@ class Wp_Antitrust {
 	}
 
 	/**
-	 * Print styles
-	 *
-	 * @since  1.0.0
-	 * @access public
-	 * @return string Returns a style block.
-	 */
-	public function dolly_would() {
-
-		echo '
-		<style>
-		#goodbye-dolly {
-			float: right;
-			margin: 0;
-			font-size: 1rem;
-			line-height: 1.7;
-		}
-
-		.rtl #goodbye-dolly {
-			float: left;
-		}
-
-		.block-editor-page #goodbye-dolly {
-			display: none;
-		}
-
-		#goodbye-dolly .dashicons-warning {
-			color: #d00;
-			vertical-align: text-bottom;
-		}
-
-		#goodbye-dolly .dashicons-warning:before {
-			font-size: 1.25rem;
-		}
-
-		@media screen and ( max-width: 782px ) {
-			#goodbye-dolly,
-			.rtl #dolly {
-				float: none;
-				padding-left: 0;
-				padding-right: 0;
-			}
-		}
-		</style>
-		';
-	}
-
-	/**
 	 * Remove widgets
 	 *
 	 * @since  1.0.0
@@ -207,6 +227,26 @@ class Wp_Antitrust {
 			esc_url( 'https://www.classicpress.net/' ),
 			esc_url( 'https://calmpress.org/' )
 		);
+	}
+
+	/**
+	 * Print welcome panel scripts
+	 *
+	 * @since  1.0.0
+	 * @access public
+	 * @return string Returns the replacement text.
+	 */
+	public function welcome_scripts() {
+
+		$script  = '<script>';
+		$script .= "
+		jQuery(document).ready( function ($) {
+			$( '.welcome-panel-content h2' ).show().text( 'Welcome to Automattic!' );
+		});
+		";
+		$script .= '</script>';
+
+		echo $script;
 	}
 
 	/**
