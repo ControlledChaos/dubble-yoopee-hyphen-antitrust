@@ -32,6 +32,9 @@ class Wp_Antitrust {
 		// Print styles.
 		add_action( 'admin_head', [ $this, 'dolly_would' ] );
 
+		// Remove dashboard widgets.
+		add_action( 'wp_dashboard_setup', [ $this, 'remove_widgets' ] );
+
 		// Primary footer text.
 		add_filter( 'admin_footer_text', [ $this, 'admin_footer_primary' ], 1 );
 
@@ -147,6 +150,22 @@ class Wp_Antitrust {
 		}
 		</style>
 		';
+	}
+
+	/**
+	 * Remove widgets
+	 *
+	 * @since  1.0.0
+	 * @access public
+	 * @global array wp_meta_boxes The metaboxes array holds all the widgets for wp-admin.
+	 * @return void
+	 */
+	public function remove_widgets() {
+
+		global $wp_meta_boxes;
+
+		// Remove WordPress news.
+		unset( $wp_meta_boxes['dashboard']['side']['core']['dashboard_primary'] );
 	}
 
 	/**
