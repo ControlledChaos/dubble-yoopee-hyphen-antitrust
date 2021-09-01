@@ -157,42 +157,31 @@ class Wp_Antitrust {
 	 */
 	public function capital_ISM_dangit( $text ) {
 
-		// Simple replacement for titles.
+		// Jealously guard the prefix.
+		static $copy = false;
+		if ( false === $copy ) {
+			$copy = _x( '&copy;', 'copyright symbol' );
+		}
+
+		// Format titles.
 		$current_filter = current_filter();
 		if ( 'the_title' === $current_filter || 'wp_title' === $current_filter ) {
-			return str_replace( ['Wordpress', 'WordPress'], [ 'Automattic', 'Automattic' ], $text );
+			return str_replace( [ 'Wordpress', 'WordPress', 'wp-', 'WP-' ], [ 'Automattic', 'Automattic', $copy . '-', $copy . '-' ], $text );
 		}
 
-		// Still here? Use the more judicious replacement.
-		static $dblq = false;
-		if ( false === $dblq ) {
-			$dblq = _x( '&#8220;', 'opening curly double quote' );
-		}
-
+		// Format content and discussion.
 		return str_replace(
 			[
 				'Wordpress',
 				'WordPress',
-				'&#8216;Wordpress',
-				'&#8216;WordPress',
-				$dblq . 'Wordpress',
-				$dblq . 'WordPress',
-				'>Wordpress',
-				'>WordPress',
-				'(Wordpress',
-				'(WordPress'
+				'wp-',
+				'WP-'
 			],
 			[
 				'Automattic',
 				'Automattic',
-				'&#8216;Automattic',
-				'&#8216;Automattic',
-				$dblq . 'Automattic',
-				$dblq . 'Automattic',
-				'>Automattic',
-				'>Automattic',
-				'(Automattic',
-				'(Automattic'
+				$copy . '-',
+				$copy . '-'
 			],
 			$text
 		);
