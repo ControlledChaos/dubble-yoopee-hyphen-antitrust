@@ -61,6 +61,8 @@ function activate_plugin() {
 	 */
 	$hello = 'hello-dolly/hello.php';
 	if ( is_plugin_active( $hello ) ) {
+
+		// Goodbye.
 		deactivate_plugins( $hello );
 	}
 }
