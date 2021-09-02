@@ -27,7 +27,8 @@ class Wp_Antitrust {
 	public function __construct() {
 
 		// Print styles.
-		add_action( 'admin_print_styles-index.php', [ $this, 'dolly_would' ] );
+		add_action( 'admin_print_styles', [ $this, 'dolly_would' ] );
+		add_action( 'admin_print_styles', [ $this, 'footer_styles' ] );
 		add_action( 'admin_print_styles-index.php', [ $this, 'welcome_styles' ] );
 
 		// Admin notice.
@@ -44,6 +45,9 @@ class Wp_Antitrust {
 
 		// Print welcome panel scripts.
 		add_action( 'admin_print_footer_scripts-index.php', [ $this, 'welcome_scripts' ] );
+
+		// About page content.
+		add_action( 'all_admin_notices', [ $this, 'about_page' ], 99 );
 
 		// Remove the Draconian capital P filters.
 		remove_filter( 'the_title', 'capital_P_dangit', 11 );
@@ -80,6 +84,7 @@ class Wp_Antitrust {
 			float: right;
 			margin: 0;
 			font-size: 1rem;
+			font-weight: bold;
 			line-height: 1.7;
 		}
 
@@ -100,6 +105,10 @@ class Wp_Antitrust {
 			font-size: 1.25rem;
 		}
 
+		.about__container {
+			display: none
+		}
+
 		@media screen and ( max-width: 782px ) {
 			#goodbye-dolly,
 			.rtl #dolly {
@@ -110,6 +119,26 @@ class Wp_Antitrust {
 		}
 		</style>
 		';
+	}
+
+	/**
+	 * Print footer styles
+	 */
+	public function footer_styles() {
+
+		$styles  = '<style>';
+		$styles .= '
+		@media screen and ( max-width: 1024px ) {
+			#wpfooter p.alignleft, #wpfooter p.alignright { float: none; }
+			#wpfooter p.alignright { margin-top: 1em; }
+		}
+		@media screen and ( max-width: 782px ) {
+			#wpfooter { display: block !important; margin: 0 !important }
+		}
+		';
+		$styles .= '</style>';
+
+		echo $styles;
 	}
 
 	/**
@@ -151,7 +180,7 @@ class Wp_Antitrust {
 		// Array of output strings.
 		$messages = [
 			__( 'Warning! Your website is in the grips of a megalomattic corporation.', 'wp-antitrust' ),
-			__( 'When publishing is democratized the majority lords over your publishing.', 'wp-antitrust' ),
+			__( 'When publishing is democratized, the majority lords over your publishing.', 'wp-antitrust' ),
 			__( '"The power of the web is not in centralization…" —Matt Mullenweg', 'wp-antitrust' )
 		];
 
@@ -206,7 +235,7 @@ class Wp_Antitrust {
 	public function admin_footer_primary() {
 
 		printf(
-			'<span class="dashicons dashicons-flag" style="color: #ee6600"></span> %s',
+			'<span style="font-size: 1rem; font-weight: bold"><span class="dashicons dashicons-flag" style="color: #ee6600"></span> %s</span>',
 			__( 'You should consider alternatives to the monopolistic Wordpress.', 'wp-antitrust' )
 		);
 	}
@@ -223,7 +252,7 @@ class Wp_Antitrust {
 		remove_filter( 'update_footer', 'core_update_footer' );
 
 		printf(
-			__( '<span class="dashicons dashicons-info" style="color: #4b9960"></span> Check out <a href="%s" target="_blank" rel="noopener noreferrer">ClassicPress</a> and <a href="%s" target="_blank" rel="noopener noreferrer">calmPress</a>', 'wp-antitrust' ),
+			__( '<span style="font-size: 1rem; font-weight: bold"><span class="dashicons dashicons-info" style="color: #4b9960"></span> Check out <a href="%s" target="_blank" rel="noopener noreferrer">ClassicPress</a> and <a href="%s" target="_blank" rel="noopener noreferrer">calmPress</a></span>', 'wp-antitrust' ),
 			esc_url( 'https://www.classicpress.net/' ),
 			esc_url( 'https://calmpress.org/' )
 		);
@@ -275,5 +304,12 @@ class Wp_Antitrust {
 
 		// Return filtered text.
 		return str_replace( $dubble_yoopee, $autocratic, $text );
+	}
+
+	/**
+	 * About page content
+	 */
+	public function about_page() {
+		include_once( plugin_dir_path( __FILE__ ) .  'views/about.php' );
 	}
 }
