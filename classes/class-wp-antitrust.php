@@ -30,12 +30,25 @@ class Wp_Antitrust {
 		add_action( 'admin_print_styles', [ $this, 'dolly_would' ] );
 		add_action( 'admin_print_styles', [ $this, 'footer_styles' ] );
 		add_action( 'admin_print_styles-index.php', [ $this, 'welcome_styles' ] );
+		add_action( 'admin_print_styles-index.php', [ $this, 'dashboard_styles' ] );
 
 		// Admin notice.
 		add_action( 'admin_notices', [ $this, 'goodbye_dolly' ] );
 
 		// Remove dashboard widgets.
-		add_action( 'wp_dashboard_setup', [ $this, 'remove_widgets' ] );
+		add_action( 'wp_dashboard_setup', [ $this, 'remove_dashboard_widgets' ] );
+
+		// Add dashboard widgets.
+		add_action( 'wp_dashboard_setup', [ $this, 'add_dashboard_widgets' ] );
+
+		// Dashboard widgets positions.
+		add_action( 'admin_init', [ $this, 'dashboard_widgets_positions' ] );
+
+		// Force display of welcome panel.
+		add_action( 'load-index.php', [ $this, 'show_welcome_panel' ] );
+
+		// Hide the dismiss welcome panel button.
+		add_action( 'admin_head', [ $this, 'welcome_dismiss' ] );
 
 		// Primary footer text.
 		add_filter( 'admin_footer_text', [ $this, 'admin_footer_primary' ], 1 );
@@ -148,7 +161,40 @@ class Wp_Antitrust {
 
 		$styles  = '<style>';
 		$styles .= '.js .welcome-panel-content h2 { display: none }';
+		$styles .= '.js .welcome-panel-content .about-description';
 		$styles .= '</style>';
+
+		echo $styles;
+	}
+
+	/**
+	 * Print dashboard widget styles
+	 *
+	 * @since  1.0.0
+	 * @access public
+	 * @return string Returns a style block.
+	 */
+	public function dashboard_styles() {
+
+		$styles  = '
+		<style>
+		#wp_antitrust_classicpress_widget h2 {
+			font-weight: bold;
+			color: #dd0000;
+		}
+		#wp_antitrust_calmpress_widget h2 {
+			font-weight: bold;
+			color: #ee6600;
+		}
+		#dashboard-widgets .wp-antitrust-dashboard-widget h3,
+		#dashboard-widgets .wp-antitrust-dashboard-widget h3 {
+			margin: 1em 0 0;
+		}
+		#dashboard-widgets .wp-antitrust-dashboard-widget h3 {
+			font-weight: bold;
+			font-weight: 600;
+		}
+		</style>';
 
 		echo $styles;
 	}
@@ -206,19 +252,138 @@ class Wp_Antitrust {
 	}
 
 	/**
-	 * Remove widgets
+	 * Remove dashboard widgets
 	 *
 	 * @since  1.0.0
 	 * @access public
 	 * @global array wp_meta_boxes The metaboxes array holds all the widgets for wp-admin.
 	 * @return void
 	 */
-	public function remove_widgets() {
+	public function remove_dashboard_widgets() {
 
 		global $wp_meta_boxes;
 
 		// Remove WordPress news.
 		unset( $wp_meta_boxes['dashboard']['side']['core']['dashboard_primary'] );
+	}
+
+	/**
+	 * Add dashboard widgets
+	 *
+	 * @since  1.0.0
+	 * @access public
+	 * @global array wp_meta_boxes The metaboxes array holds all the widgets for wp-admin.
+	 * @return void
+	 */
+	public function add_dashboard_widgets() {
+
+		// Add the ClassicPress widget.
+		wp_add_dashboard_widget(
+			'wp_antitrust_classicpress_widget',
+			__( 'Get ClassicPress!', 'wp-antitrust' ),
+			[ $this, 'classicpress_widget' ]
+		);
+
+		// Add the calmPress widget.
+		wp_add_dashboard_widget(
+			'wp_antitrust_calmpress_widget',
+			__( 'Get calmPress!', 'wp-antitrust' ),
+			[ $this, 'calmpress_widget' ]
+		);
+	}
+
+	/**
+	 * ClassicPress widget output
+	 *
+	 * @since  1.0.0
+	 * @access public
+	 * @return void
+	 */
+	public function classicpress_widget() {
+		include_once( HIGH_ROAD . 'views/classicpress-widget.php' );
+	}
+
+	/**
+	 * calmPress widget output
+	 *
+	 * @since  1.0.0
+	 * @access public
+	 * @return void
+	 */
+	public function calmpress_widget() {
+		include_once( HIGH_ROAD . 'views/calmpress-widget.php' );
+	}
+
+	/**
+	 * Dashboard widgets positions
+	 *
+	 * Forces the column position of dashboard widgets.
+	 *
+	 * @since  1.0.0
+	 * @access public
+	 * @return void
+	 */
+	public function dashboard_widgets_positions() {
+
+		// Get the current user's ID.
+		$user_id = get_current_user_id();
+
+		// Accepts normal, side, column3, and column4.
+		$user_meta = [
+			'normal' => 'wp_antitrust_classicpress_widget',
+			'side'   => 'wp_antitrust_calmpress_widget'
+		];
+
+		// Update the user preference.
+		update_user_meta( $user_id, 'meta-box-order_dashboard', $user_meta );
+	}
+
+	/**
+	 * Force display of welcome panel
+	 *
+	 * @since  1.0.0
+	 * @access public
+	 * @return void
+	 */
+	public function show_welcome_panel() {
+
+		// Get the current user's ID.
+		$user_id = get_current_user_id();
+
+		// Update the user preference.
+		if ( 1 != get_user_meta( $user_id, 'show_welcome_panel', true ) ) {
+			update_user_meta( $user_id, 'show_welcome_panel', 1 );
+		}
+	}
+
+	/**
+	 * Remove welcome panel dismiss button
+	 *
+	 * @since  1.0.0
+	 * @access public
+	 * @return string Returns a style block and a script block.
+	 */
+	public function welcome_dismiss() {
+
+		$dismiss = "
+			<style>
+				a.welcome-panel-close,
+				#wp_welcome_panel-hide,
+				.metabox-prefs label[for='wp_welcome_panel-hide'] {
+					display: none !important;
+				}
+				.welcome-panel {
+					display: block !important;
+				}
+			</style>
+			<script>
+			jQuery(document).ready( function ($) {
+				$( 'a.welcome-panel-close' ).remove();
+			});
+			</script>
+			";
+
+		echo $dismiss;
 	}
 
 	/**
@@ -255,7 +420,7 @@ class Wp_Antitrust {
 	}
 
 	/**
-	 * Print welcome panel scripts
+	 * Welcome panel scripts
 	 *
 	 * @since  1.0.0
 	 * @access public
@@ -263,10 +428,14 @@ class Wp_Antitrust {
 	 */
 	public function welcome_scripts() {
 
+		$heading     = __( 'Welcome to Wordpress by Automattic!', 'wp-antitrust' );
+		$description = __( 'Corporate lobbyist for democratized publishing since 2005.', 'wp-antitrust' );
+
 		$script  = '<script>';
 		$script .= "
 		jQuery(document).ready( function ($) {
-			$( '.welcome-panel-content h2' ).show().text( 'Welcome to Automattic!' );
+			$( '.welcome-panel-content h2' ).show().text( '" . $heading . "' );
+			$( '.welcome-panel-content .about-description' ).show().text( '" . $description . "' );
 		});
 		";
 		$script .= '</script>';
