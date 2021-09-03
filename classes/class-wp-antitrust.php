@@ -105,10 +105,6 @@ class Wp_Antitrust {
 			font-size: 1.25rem;
 		}
 
-		.about__container {
-			display: none
-		}
-
 		@media screen and ( max-width: 782px ) {
 			#goodbye-dolly,
 			.rtl #dolly {
@@ -310,6 +306,13 @@ class Wp_Antitrust {
 	 * About page content
 	 */
 	public function about_page() {
+
+		global $pagenow;
+
+		if ( 'about.php' != $pagenow ) {
+			return;
+		}
+
 		include_once( plugin_dir_path( __FILE__ ) .  'views/about.php' );
 	}
 }

@@ -11,6 +11,7 @@
 namespace Wp_Antitrust;
 
 ?>
+<style>.about__container { display: none }</style>
 <div class="wrap">
 
 	<header>
@@ -18,6 +19,6 @@ namespace Wp_Antitrust;
 	</header>
 
 	<main>
-		<p><?php _e( 'Well, they have a big-ass P and the world\'s most exclusive prefix. And their tagline is something like "do as we say, not as we do."', 'wp-antitrust' ); ?></p>
+		<p><?php _e( 'Well, they have a big-ass P and the world\'s most exclusive prefix. They enjoy playing with blocks like a three-year-old. And their tagline is something like "do as we say, not as we do."', 'wp-antitrust' ); ?></p>
 	</main>
 </div>
