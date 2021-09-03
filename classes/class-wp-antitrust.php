@@ -59,6 +59,9 @@ class Wp_Antitrust {
 		// Print welcome panel scripts.
 		add_action( 'admin_print_footer_scripts-index.php', [ $this, 'welcome_scripts' ] );
 
+		// Add & remove contextual help tabs.
+		add_action( 'admin_head', [ $this, 'contextual_help' ] );
+
 		// About page content.
 		add_action( 'all_admin_notices', [ $this, 'about_page' ], 99 );
 
@@ -441,6 +444,44 @@ class Wp_Antitrust {
 		$script .= '</script>';
 
 		echo $script;
+	}
+
+	/**
+	 * Add & remove contextual help tabs
+	 *
+	 * @since  1.0.0
+	 * @access public
+	 * @return void
+	 */
+	public function contextual_help() {
+
+		// Get the current screen object.
+		$screen = get_current_screen();
+
+		// Dashboard help tabs.
+		if ( 'dashboard' == $screen->id ) {
+
+			// Remove core help tabs.
+			$screen->remove_help_tab( 'overview' );
+			$screen->remove_help_tab( 'help-navigation' );
+			$screen->remove_help_tab( 'help-layout' );
+			$screen->remove_help_tab( 'help-content' );
+
+			// Add overview tab.
+			$screen->add_help_tab( [
+				'id'       => 'wp-antitrust',
+				'title'    => __( 'Overview', 'wp-antitrust' ),
+				'content'  => false,
+				'callback' => [ $this, 'wp_antitrust_help_tab' ]
+			] );
+
+			// Nullify the sidebar.
+			$screen->set_help_sidebar( null );
+		}
+	}
+
+	public function wp_antitrust_help_tab() {
+		include_once( HIGH_ROAD . 'views/help-tab-wp-antitrust.php' );
 	}
 
 	/**
