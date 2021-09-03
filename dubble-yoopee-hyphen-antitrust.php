@@ -2,7 +2,7 @@
 /**
  * Wp Hyphen Antitrust
  *
- * A plugin compatible with several website systems.
+ * An anti-wordpress plugin for Wordpress, ClassicPress, calmPress, and other compatible systems.
  *
  * @package Wp_Antitrust
  * @version 1.0.0
@@ -10,7 +10,7 @@
  *
  * Plugin Name:  Wp Hyphen Antitrust
  * Plugin URI:   https://github.com/ControlledChaos/wp-antitrust
- * Description:  A plugin compatible with several website systems.
+ * Description:  An anti-wordpress plugin for Wordpress, ClassicPress, calmPress, and other compatible systems.
  * Version:      1.0.0
  * Author:       Controlled Chaos Design
  * Author URI:   http://ccdzine.com/
