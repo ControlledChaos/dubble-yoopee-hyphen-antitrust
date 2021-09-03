@@ -313,6 +313,6 @@ class Wp_Antitrust {
 			return;
 		}
 
-		include_once( plugin_dir_path( __FILE__ ) .  'views/about.php' );
+		include_once( HIGH_ROAD . 'views/about.php' );
 	}
 }

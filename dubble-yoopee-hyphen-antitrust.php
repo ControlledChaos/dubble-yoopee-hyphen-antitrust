@@ -26,6 +26,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+// Define plugin path.
+define( 'HIGH_ROAD', plugin_dir_path( __FILE__ ) );
+
 // Get class files.
 foreach ( glob( plugin_dir_path( __FILE__ ) .  'classes/*.php' ) as $filename ) {
 	require_once $filename;
