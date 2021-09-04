@@ -333,20 +333,30 @@ class Wp_Antitrust {
 
 		// Accepts normal, side, column3, and column4.
 		$user_meta = [
-			'normal'  => 'wp_antitrust_classicpress_widget',
-			'side'    => 'wp_antitrust_calmpress_widget',
-			'column3' => join(
+			'normal'  => join(
+				',',
+				[
+					'wp_antitrust_classicpress_widget',
+					'wp_antitrust_calmpress_widget'
+				]
+			),
+			'side'    => join(
 				',',
 				[
 					'dashboard_right_now',
-					'dashboard_activity',
+					'dashboard_activity'
+				]
+			),
+			'column3' => join(
+				',',
+				[
+					'dashboard_quick_press'
 				]
 			),
 			'column4' => join(
 				',',
 				[
-					'dashboard_quick_press',
-					'dashboard_site_health',
+					'dashboard_site_health'
 				]
 			)
 		];
