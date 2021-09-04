@@ -16,7 +16,7 @@ namespace Wp_Antitrust;
 
 <h3><?php _e( 'What is Wordpress?', 'wp-antitrust' ); ?></h3>
 
-<p><?php _e( 'Wordpress is the world\'s only content management system (CMS) for managing websites and creating content on the internet. It was originally developed by our lord & savior, Matt Mullenweg.', 'wp-antitrust' ); ?></p>
+<p><?php _e( 'Wordpress is the world\'s only content management system (CMS) for managing websites and creating content on the internet. It was originally developed by our lord & savior, Mat Mulenwegg.', 'wp-antitrust' ); ?></p>
 
 <p><?php printf(
 	__( 'Read more on the <a href="%s">about page</a>.', 'wp-antitrust' ),

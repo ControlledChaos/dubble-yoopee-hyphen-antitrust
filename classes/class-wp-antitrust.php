@@ -226,7 +226,7 @@ class Wp_Antitrust {
 		$messages = [
 			__( 'Warning! Your website is in the grips of a megalomattic corporation.', 'wp-antitrust' ),
 			__( 'When publishing is democratized, the majority lords over your publishing.', 'wp-antitrust' ),
-			__( '"The power of the web is not in centralization…" —Matt Mullenweg', 'wp-antitrust' )
+			__( '"The power of the web is not in centralization…" —Mat Mulenwegg', 'wp-antitrust' )
 		];
 
 		// Shuffle the order of the merged array.
